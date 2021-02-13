@@ -5,11 +5,14 @@ import database from './configs/firebase.config';
 
 //screens and assets
 import LoginScreen from './screens/LoginScreen';
+import { Provider } from 'react-native-paper';
 
 export default function App() {
 	database.enablePersistence();
 
-  return <LoginScreen /> ;
+  return <Provider>
+	  			<LoginScreen /> 
+		  	</Provider>
 }
 
 export const injectWebCss = () => {

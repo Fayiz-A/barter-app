@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScaledSize, Dimensions, TouchableOpacity, ColorValue } from "react-native";
+import { View, Text, StyleSheet, ScaledSize, Dimensions, ColorValue } from "react-native";
 import CustomAppBar from '../components/CustomAppBar';
 import CustomTextInput from '../components/CustomTextInput';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { Avatar } from 'react-native-elements';
 import CustomButton from '../components/CustomButton';
-import GLOBALS from '../constants/globals';
 import EmailValidator from 'email-validator';
+import { Modal, Portal } from 'react-native-paper';
 
 import firebase from 'firebase';
-import firestore from '../configs/firebase.config.ts';
+import database from '../configs/firebase.config';
+
+import GLOBALS from '../constants/globals';
 
 interface TextInputDetail {
    placeholder:string,
@@ -30,7 +31,12 @@ enum Status {
    badCredentials,
    emptyEmail,
    emptyPassword,
-   emailBadlyFormatted
+   emailBadlyFormatted,
+   userNotFound,
+   userDisabled,
+   operationNotAllowed,
+   weakPassword,
+   emailAlreadyInUse
 } 
 
 export default function LoginScreen() {
@@ -45,6 +51,12 @@ export default function LoginScreen() {
    
    let [ email, setEmail ] = useState<string>('');
    let [ password, setPassword ] = useState<string>('');
+
+   let [ modalVisible, setModalVisible ] = useState<boolean>(false);
+   let [ emailIDInModal, setEmailIDInModal ] = useState<string>('');
+   let [ address, setAddress ] = useState<string>('');
+   let [ contactNo, setContactNo ] = useState<string>('');
+   let [ name, setName ] = useState<string>('');
 
    let textInputDetails:TextInputDetail[] = [
       {
@@ -78,10 +90,16 @@ export default function LoginScreen() {
                   alert(`Email badly formatted`)
                break;
                case Status.badCredentials:
-                  alert(`Bad Credentials`);
+                  alert(`Wrong credentials`);
                break;
                case Status.successful:
-                  alert(`User added successfully`)
+                  alert(`User sign in successful`)
+               break;
+               case Status.userNotFound:
+                  alert(`User not found`)
+               break;
+               case Status.userDisabled:
+                  alert(`User disabled`)
                break;
                default: alert(`Some unknown error occurred`)
             }
@@ -104,7 +122,17 @@ export default function LoginScreen() {
                   alert(`Email badly formatted`)
                break;
                case Status.successful:
-                  alert(`User added successfully`)
+                  // alert(`User added successfully`)
+                  setModalVisible(true);
+               break;
+               case Status.emailAlreadyInUse:
+                  alert(`Email already in use`)
+               break;
+               case Status.weakPassword:
+                  alert(`Weak password`)
+               break;
+               case Status.operationNotAllowed:
+                  alert(`Operation not allowed`)
                break;
                default: alert(`Some unknown error occurred`)
             }
@@ -112,10 +140,249 @@ export default function LoginScreen() {
       }
    ]
 
+   let signUpModalDetailsTextInput:TextInputDetail[] = [
+      {
+         placeholder: 'Name',
+         onChangeText: (text:string) => setName(text),
+         value: name,
+      },
+      {
+         placeholder: 'Email ID',
+         onChangeText: (text:string) => setEmailIDInModal(text),
+         value: emailIDInModal,
+      },
+      {
+         placeholder: 'Address',
+         onChangeText: (text:string) => setAddress(text),
+         value: address,
+      },
+      {
+         placeholder: 'Contact No.',
+         onChangeText: (text:string) => setContactNo(text),
+         value: contactNo,
+      }
+   ]
+
+   let modalButtonDetails:ButtonDetail[] = [
+      {
+         buttonText: 'Submit',
+         buttonColor: 'purple',
+         onPress: async () => {
+            setModalVisible(false);
+            let userDetailsRegisteredStatus:Status = await setUserDetailsInFirestore(name, emailIDInModal, address, contactNo);
+            
+            switch (userDetailsRegisteredStatus) {
+               case Status.successful:
+                  alert(`User details entered successfully.`)
+               break;
+               default:
+                  alert(`Some Error Occurred`);
+            }
+         }
+      },
+      {
+         buttonText: 'Cancel',
+         buttonColor: 'red',
+         onPress: () => setModalVisible(false)
+      }
+   ] 
+
+   const styles = (dimensions: ScaledSize) => StyleSheet.create({
+      background: {
+         backgroundColor:'#F8BE85',
+         height: '100vh',      
+      }, 
+      modal: {
+         marginLeft: dimensions.width / 2 - ((dimensions.width / 2) / 2), // dimensions.width / 2 is the width of the modal
+         marginTop: dimensions.height / 2 - ((dimensions.height / 2) / 2), // dimensions.height / 2 is the width of the modal
+         width: dimensions.width / 2,
+         height: dimensions.height / 1.9,
+         shadowOpacity: 0.5,
+         shadowRadius: 2.0,
+         shadowOffset: {
+            width: 0.0,
+            height: 6.0
+         },
+         elevation: 20.0,
+         backgroundColor: '#FFC107',
+         borderRadius: 20.0,
+      },
+      modalContent: {
+         justifyContent: 'flex-start',
+         alignItems: 'center',
+         height: '100%',
+         width: '100%',
+         borderRadius: 20.0
+      },
+      modalHeadingContainer: {
+         paddingVertical: 1,
+         alignItems: 'center',
+         width: '100%',
+      },
+      modalHeading: {
+         fontFamily: 'cursive',
+         fontSize: 30,
+         fontWeight: 'bold'
+      },
+      modalButtonGroupContainer: {
+         paddingTop: 5,
+      },
+      modalButtonContainer: {
+         paddingBottom: dimensions.height / 60,
+      },
+      imageContainer: {
+         paddingVertical: 20,
+         justifyContent: "center",
+         alignItems: 'center',
+      },
+      avatar: {
+         backgroundColor: 'white', 
+         borderWidth: 5
+      },
+      detailsContainer: {
+         width: '100%',
+         alignItems: 'center'
+      },
+      textInputContainer: {
+         paddingTop: 20,
+      },
+      buttonContainer: {
+         paddingTop: 15,
+      }
+   })
+
+   const validateCredentials = (email:string, password:string):Status => {
+      if(email == null || email.trim().length == 0) return Status.emptyEmail
+      if(password == null || password.trim().length == 0) return Status.emptyPassword
+      if(!EmailValidator.validate(email)) return Status.emailBadlyFormatted
+      return Status.successful;
+   }
+   
+   const authenticateUserWithEmailAndPassword = async (email:string, password: string) => {
+      let credentialsValidStatus:Status = validateCredentials(email, password);
+      if(credentialsValidStatus != Status.successful) return credentialsValidStatus;
+   
+      try {
+         await firebase.auth().signInWithEmailAndPassword(email, password);
+         return Status.successful;
+      } catch(err) {
+         console.error(err);
+         let errCode = err.code;
+   
+         switch(errCode) {
+            case 'auth/wrong-password':
+               return Status.badCredentials
+            break;
+            case 'auth/user-not-found':
+               return Status.userNotFound
+            break;
+            case 'auth/user-disabled':
+               return Status.userDisabled
+            break;
+            case 'auth/invalid-email':
+               return Status.emailBadlyFormatted
+            break;
+            default: return Status.unknownError
+         } 
+      };
+   }
+   
+   const signUpUser = async (email:string, password: string):Promise<Status> => {
+      
+      let credentialsValidStatus:Status = validateCredentials(email, password);
+      if(credentialsValidStatus != Status.successful) return credentialsValidStatus;
+   
+      try {
+         await firebase.auth().createUserWithEmailAndPassword(email, password);
+         return Status.successful;
+      } catch(err) {
+         console.error(err);
+         let errCode = err.code;
+   
+         switch(errCode) {
+            case 'auth/email-already-in-use':
+               return Status.emailAlreadyInUse
+            break;
+            case 'auth/invalid-email':
+               return Status.emailBadlyFormatted
+            break;
+            case 'auth/operation-not-allowed':
+               return Status.operationNotAllowed
+            break;
+            case 'auth/weak-password':
+               return Status.weakPassword
+            break;
+            default: return Status.unknownError
+         } 
+      };
+   }
+
+   const setUserDetailsInFirestore = async (name:string, emailID:string, address:string, contactNo:string):Promise<Status> => {
+      try {
+         const res = await database.collection(GLOBALS.firebase.firestore.collections.names.users).add({
+            name: name,
+            emailID: emailID,
+            address: address,
+            contactNo: contactNo
+         });
+         return Status.successful;
+      } catch (err) {
+         console.error(err);
+         return Status.unknownError;
+      }
+   }
+
    return (
       <View style={styles(dimensions).background}>
          <View>
             <CustomAppBar title='Login'/>
+               <Portal>
+                  <Modal
+                     dismissable={false}
+                     visible={modalVisible}
+                     contentContainerStyle={styles(dimensions).modalContent}
+                     style={styles(dimensions).modal}
+                  >
+                     <View style={styles(dimensions).modalHeadingContainer}>
+                        <Text style={styles(dimensions).modalHeading}>
+                           Information:
+                        </Text>
+                     </View>
+                     <View>
+                        {
+                           signUpModalDetailsTextInput.map((detail:TextInputDetail) => {
+                              return (
+                                 <View>
+                                    <CustomTextInput 
+                                       placeholder={detail.placeholder}
+                                       onChangeText={detail.onChangeText}
+                                       value={detail.value}
+                                       obscureText={false}
+                                       width={(dimensions.width / 2) / 2} //dimensions.width / 2 is the width of the modal
+                                    />
+                                 </View>
+                              )
+                           })
+                        }
+                        <View style={styles(dimensions).modalButtonGroupContainer}>
+                        {
+                           modalButtonDetails.map((detail:ButtonDetail) => {
+                              return (
+                                 <View style={styles(dimensions).modalButtonContainer}>
+                                    <CustomButton 
+                                       buttonText={detail.buttonText}
+                                       buttonColor={detail.buttonColor}
+                                       onPress={detail.onPress}
+                                       buttonTextColor='white'
+                                    />
+                                 </View>
+                              )
+                           })
+                        }
+                        </View>
+                     </View>
+                  </Modal>
+               </Portal>
             <View style={styles(dimensions).imageContainer}>
                <Avatar 
                   rounded
@@ -165,63 +432,3 @@ export default function LoginScreen() {
       </View> 
    );
 }
-
-const validateCredentials = (email:string, password:string):Status => {
-   if(email == null || email.trim().length == 0) return Status.emptyEmail
-   if(password == null || password.trim().length == 0) return Status.emptyPassword
-   if(!EmailValidator.validate(email)) return Status.emailBadlyFormatted
-   return Status.successful;
-}
-
-const authenticateUserWithEmailAndPassword = async (email:string, password: string) => {
-   let credentialsValidStatus:Status = validateCredentials(email, password);
-   if(credentialsValidStatus != Status.successful) return credentialsValidStatus;
-
-   try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
-      return Status.successful;
-   } catch(err) {
-      console.error(err);
-      return Status.unknownError
-   };
-}
-
-const signUpUser = async (email:string, password: string):Promise<Status> => {
-   
-   let credentialsValidStatus:Status = validateCredentials(email, password);
-   if(credentialsValidStatus != Status.successful) return credentialsValidStatus;
-
-   try {
-      await firebase.auth().createUserWithEmailAndPassword(email, password);
-      return Status.successful;
-   } catch(err) {
-      console.error(err);
-      return Status.unknownError
-   };
-}
-
-const styles = (dimensions: ScaledSize) => StyleSheet.create({
-   background: {
-      backgroundColor:'#F8BE85',
-      height: '100vh',      
-   }, 
-   imageContainer: {
-      paddingVertical: 20,
-      justifyContent: "center",
-      alignItems: 'center',
-   },
-   avatar: {
-      backgroundColor: 'white', 
-      borderWidth: 5
-   },
-   detailsContainer: {
-      width: '100%',
-      alignItems: 'center'
-   },
-   textInputContainer: {
-      paddingTop: 20,
-   },
-   buttonContainer: {
-      paddingTop: 15,
-   }
-})
