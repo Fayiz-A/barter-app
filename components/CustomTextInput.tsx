@@ -24,7 +24,7 @@ export default function CustomTextInput(props:Props) {
 const styles = (props:Props) => StyleSheet.create({
    textInput: {
       width: props.width,
-      fontSize: 20,
+      fontSize: 23,
       padding: 3,
       borderBottomWidth: 2,
    }

@@ -8,7 +8,9 @@ interface Props {
 
 export default function CustomAppBar(props: Props) {
    return(
-      <Appbar.Header>
+      <Appbar.Header
+         style={{backgroundColor: '#6d4c41'}}
+      >
          <Appbar.Content title={props.title} style={{alignItems: "center"}}/>
       </Appbar.Header>
    );
