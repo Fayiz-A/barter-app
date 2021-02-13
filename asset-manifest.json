@@ -1,0 +1,38 @@
+{
+  "files": {
+    "app.js": "/barter-app/static/js/app.a0dab559.chunk.js",
+    "app.js.map": "/barter-app/static/js/app.a0dab559.chunk.js.map",
+    "runtime~app.js": "/barter-app/static/js/runtime~app.a10aa783.js",
+    "runtime~app.js.map": "/barter-app/static/js/runtime~app.a10aa783.js.map",
+    "static/js/2.a7784d1e.chunk.js": "/barter-app/static/js/2.a7784d1e.chunk.js",
+    "static/js/2.a7784d1e.chunk.js.map": "/barter-app/static/js/2.a7784d1e.chunk.js.map",
+    "fonts/AntDesign.ttf": "/barter-app/./fonts/AntDesign.ttf",
+    "fonts/Entypo.ttf": "/barter-app/./fonts/Entypo.ttf",
+    "fonts/Feather.ttf": "/barter-app/./fonts/Feather.ttf",
+    "fonts/FontAwesome.ttf": "/barter-app/./fonts/FontAwesome.ttf",
+    "fonts/FontAwesome5_Brands.ttf": "/barter-app/./fonts/FontAwesome5_Brands.ttf",
+    "fonts/FontAwesome5_Solid.ttf": "/barter-app/./fonts/FontAwesome5_Solid.ttf",
+    "fonts/Fontisto.ttf": "/barter-app/./fonts/Fontisto.ttf",
+    "fonts/Foundation.ttf": "/barter-app/./fonts/Foundation.ttf",
+    "fonts/Ionicons.ttf": "/barter-app/./fonts/Ionicons.ttf",
+    "fonts/MaterialCommunityIcons.ttf": "/barter-app/./fonts/MaterialCommunityIcons.ttf",
+    "fonts/MaterialIcons.ttf": "/barter-app/./fonts/MaterialIcons.ttf",
+    "fonts/SimpleLineIcons.ttf": "/barter-app/./fonts/SimpleLineIcons.ttf",
+    "favicon-16.png": "/barter-app/favicon-16.png",
+    "favicon-32.png": "/barter-app/favicon-32.png",
+    "favicon.ico": "/barter-app/favicon.ico",
+    "index.html": "/barter-app/index.html",
+    "manifest.json": "/barter-app/manifest.json",
+    "serve.json": "/barter-app/serve.json",
+    "static/js/2.a7784d1e.chunk.js.LICENSE.txt": "/barter-app/static/js/2.a7784d1e.chunk.js.LICENSE.txt",
+    "static/media/bell.png": "/barter-app/static/media/bell.cf04af27.png",
+    "static/media/heart.png": "/barter-app/static/media/heart.23b5c2c0.png",
+    "static/media/rocket.png": "/barter-app/static/media/rocket.d2f3bf41.png",
+    "static/media/star.png": "/barter-app/static/media/star.69c71386.png"
+  },
+  "entrypoints": [
+    "static/js/runtime~app.a10aa783.js",
+    "static/js/2.a7784d1e.chunk.js",
+    "static/js/app.a0dab559.chunk.js"
+  ]
+}
