@@ -1,5 +1,6 @@
 import React from 'react';
-import { TextInput, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { Input } from 'react-native-elements';
 
 interface Props {
    placeholder:string,
@@ -11,7 +12,7 @@ interface Props {
 
 export default function CustomTextInput(props:Props) {
    return (
-      <TextInput 
+      <Input 
          placeholder={props.placeholder}
          style={styles(props).textInput}
          onChangeText={props.onChangeText}
@@ -27,5 +28,6 @@ const styles = (props:Props) => StyleSheet.create({
       fontSize: 23,
       padding: 3,
       borderBottomWidth: 2,
+      borderColor: 'black'
    }
 })

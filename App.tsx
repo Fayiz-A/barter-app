@@ -1,11 +1,14 @@
 import React from 'react';
 import { StyleSheet, Text, View, Platform } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import database from './configs/firebase.config';
 
 //screens and assets
 import LoginScreen from './screens/LoginScreen';
 
 export default function App() {
+	database.enablePersistence();
+
   return <LoginScreen /> ;
 }
 
