@@ -1,6 +1,9 @@
 {
+  "homepage": "https://fayiz-a.github.io/barter-app/",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
+    "deploy": "gh-pages -d web-build",
+    "predoploy": "expo build:web",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
@@ -8,20 +11,32 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@react-native-community/masked-view": "^0.1.10",
+    "@react-navigation/bottom-tabs": "^5.11.7",
+    "@react-navigation/material-bottom-tabs": "^5.3.13",
+    "@react-navigation/native": "^5.9.2",
+    "@react-navigation/stack": "^5.14.2",
+    "@types/react-redux": "^7.1.16",
     "email-validator": "^2.0.4",
     "expo": "~40.0.0",
     "expo-status-bar": "~1.0.3",
     "firebase": "^8.2.7",
+    "gh-pages": "^3.1.0",
     "modal-react-native-web": "^0.2.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-40.0.1.tar.gz",
     "react-native-elements": "^3.2.0",
+    "react-native-gesture-handler": "^1.10.1",
     "react-native-paper": "^4.7.1",
+    "react-native-reanimated": "^1.13.2",
     "react-native-safe-area-context": "^3.1.9",
+    "react-native-screens": "^2.17.1",
     "react-native-vector-icons": "^8.0.0",
     "react-native-web": "~0.13.12",
-    "react-navigation": "^4.4.3"
+    "react-navigation": "^4.4.3",
+    "react-redux": "^7.2.2",
+    "redux-devtools-extension": "^2.13.8"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0",

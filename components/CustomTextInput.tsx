@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
 
-interface Props {
+export interface Props {
    placeholder:string,
    width: number,
    onChangeText: (text:string) => void,

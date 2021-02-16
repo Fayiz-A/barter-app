@@ -39,7 +39,11 @@ enum Status {
    emailAlreadyInUse
 } 
 
-export default function LoginScreen() {
+interface Props {
+   navigation: any,
+}
+
+export default function LoginScreen(props:Props) {
 
    useEffect(() => {
       Dimensions.addEventListener('change', ({ window, screen }: { window: ScaledSize; screen: ScaledSize }) => {
@@ -93,7 +97,7 @@ export default function LoginScreen() {
                   alert(`Wrong credentials`);
                break;
                case Status.successful:
-                  alert(`User sign in successful`)
+                  props.navigation.replace('exchangeViewTabNavigator')
                break;
                case Status.userNotFound:
                   alert(`User not found`)
@@ -173,7 +177,7 @@ export default function LoginScreen() {
             
             switch (userDetailsRegisteredStatus) {
                case Status.successful:
-                  alert(`User details entered successfully.`)
+                  props.navigation.navigate('exchangeViewTabNavigator')
                break;
                default:
                   alert(`Some Error Occurred`);
