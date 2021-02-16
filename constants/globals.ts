@@ -3,7 +3,8 @@ export default {
       firestore: {
          collections: {
             names: {
-               users: 'users'
+               users: 'users',
+               itemsToExchange: 'itemsToExchange'
             }
          }
       }

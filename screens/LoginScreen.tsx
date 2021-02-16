@@ -11,6 +11,7 @@ import firebase from 'firebase';
 import database from '../configs/firebase.config';
 
 import GLOBALS from '../constants/globals';
+import Status from '../constants/status';
 
 interface TextInputDetail {
    placeholder:string,
@@ -24,20 +25,6 @@ interface ButtonDetail {
    onPress: () => void,
    buttonColor: ColorValue
 }
-
-enum Status {
-   successful,
-   unknownError,
-   badCredentials,
-   emptyEmail,
-   emptyPassword,
-   emailBadlyFormatted,
-   userNotFound,
-   userDisabled,
-   operationNotAllowed,
-   weakPassword,
-   emailAlreadyInUse
-} 
 
 interface Props {
    navigation: any,
@@ -84,10 +71,10 @@ export default function LoginScreen(props:Props) {
             let authStatus:Status = await authenticateUserWithEmailAndPassword(email, password);
 
             switch(authStatus) {
-               case Status.emptyEmail:
+               case Status.emptyField1:
                   alert(`Empty email`)
                break;
-               case Status.emptyPassword:
+               case Status.emptyField2:
                   alert(`Empty password`)
                break;
                case Status.emailBadlyFormatted:
@@ -116,10 +103,10 @@ export default function LoginScreen(props:Props) {
             let authStatus:Status = await signUpUser(email, password);
 
             switch(authStatus) {
-               case Status.emptyEmail:
+               case Status.emptyField1:
                   alert(`Empty email`)
                break;
-               case Status.emptyPassword:
+               case Status.emptyField2:
                   alert(`Empty password`)
                break;
                case Status.emailBadlyFormatted:
@@ -256,8 +243,8 @@ export default function LoginScreen(props:Props) {
    })
 
    const validateCredentials = (email:string, password:string):Status => {
-      if(email == null || email.trim().length == 0) return Status.emptyEmail
-      if(password == null || password.trim().length == 0) return Status.emptyPassword
+      if(email == null || email.trim().length == 0) return Status.emptyField1
+      if(password == null || password.trim().length == 0) return Status.emptyField2
       if(!EmailValidator.validate(email)) return Status.emailBadlyFormatted
       return Status.successful;
    }
