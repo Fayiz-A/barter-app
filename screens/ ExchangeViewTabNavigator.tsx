@@ -11,7 +11,6 @@ function ExchangeViewTabNavigator() {
 
    return (
       <BottomTab.Navigator
-         initialRouteName='requestScreen'
          barStyle={{ backgroundColor: 'purple' }}
       >
          <BottomTab.Screen

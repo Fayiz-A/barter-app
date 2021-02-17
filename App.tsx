@@ -22,7 +22,7 @@ export default function App() {
 	return (
 			<Provider>
 				<NavigationContainer>
-					<Stack.Navigator initialRouteName='exchangeViewTabNavigator'>
+					<Stack.Navigator initialRouteName='loginScreen'>
 						<Stack.Screen
 							name='loginScreen'
 							component={LoginScreen}
