@@ -84,7 +84,7 @@ export default function LoginScreen(props:Props) {
                   alert(`Wrong credentials`);
                break;
                case Status.successful:
-                  props.navigation.replace('exchangeViewTabNavigator')
+                  props.navigation.replace('homeScreen')
                break;
                case Status.userNotFound:
                   alert(`User not found`)
@@ -164,7 +164,7 @@ export default function LoginScreen(props:Props) {
             
             switch (userDetailsRegisteredStatus) {
                case Status.successful:
-                  props.navigation.navigate('exchangeViewTabNavigator')
+                  props.navigation.navigate('homeScreen')
                break;
                default:
                   alert(`Some Error Occurred`);

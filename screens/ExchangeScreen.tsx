@@ -6,6 +6,7 @@ import database from '../configs/firebase.config';
 import GLOBALS from '../constants/globals';
 import { List, Divider } from 'react-native-paper';
 import CustomButton from '../components/CustomButton';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
 
 interface ItemInterface {
    name: string,
@@ -13,11 +14,16 @@ interface ItemInterface {
    timeStamp: Date
 }
 
-function ExchangeScreen() {
+interface Props {
+   navigation: any
+}
+
+function ExchangeScreen(props:Props) {
 
    const [dimensions, setDimensions] = useState<ScaledSize>(Dimensions.get('window'));
    const [itemsList, setItemsList] = useState<any[]>([]);
    const [lastItemFetchedTimestamp, setLastItemFetchedTimestamp] = useState<Date | null>(null);
+   const navigation = useNavigation();
 
    useEffect(() => {
       Dimensions.addEventListener("change", ({ window, screen }) => {
@@ -47,7 +53,6 @@ function ExchangeScreen() {
          database.collection(GLOBALS.firebase.firestore.collections.names.itemsToExchange)
             .onSnapshot(snapshot => {
                let dataList = [];
-               console.log(`Snapshot given: ${JSON.stringify(snapshot)}`);
                dataList = snapshot.docs.map(doc => doc.data());                              
                setItemsList(oldList => {
                   oldList.push(...dataList);
@@ -97,7 +102,7 @@ function ExchangeScreen() {
 
    return (
       <View>
-         <CustomAppBar title='Exchange Screen' color='#ffca28' />
+         <CustomAppBar title='Exchange Screen' color='#ffca28' drawerAvailable={true}/>
          <View>
             <FlatList
                data={itemsList}

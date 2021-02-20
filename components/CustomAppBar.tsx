@@ -1,18 +1,34 @@
 import React from 'react';
 import { StyleSheet, Text, View, ColorValue } from 'react-native';
 import { Appbar } from 'react-native-paper';
+import { useNavigation, DrawerActions } from '@react-navigation/native';
+import { Icon } from 'react-native-paper/lib/typescript/components/Avatar/Avatar';
 
 interface Props {
    title:string,
-   color?: ColorValue
+   color?: ColorValue,
+   drawerAvailable?: boolean
 }
 
 export default function CustomAppBar(props: Props) {
+
+   const navigation = useNavigation();
+   
    return(
       <Appbar.Header
          style={{backgroundColor: props.color ? props.color:'#6d4c41'}}
       >
-         <Appbar.Content title={props.title} style={{alignItems: "center"}}/>
+         {
+            props.drawerAvailable ? <Appbar.Action 
+               icon={'menu'}
+               size={30}
+               onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
+            />:null
+         }
+         <Appbar.Content 
+            title={props.title} 
+            style={{alignItems: "center"}}
+         />
       </Appbar.Header>
    );
 }
