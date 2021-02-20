@@ -23,12 +23,15 @@ function ExchangeScreen(props:Props) {
    const [dimensions, setDimensions] = useState<ScaledSize>(Dimensions.get('window'));
    const [itemsList, setItemsList] = useState<any[]>([]);
    const [lastItemFetchedTimestamp, setLastItemFetchedTimestamp] = useState<Date | null>(null);
-   const navigation = useNavigation();
 
    useEffect(() => {
+
       Dimensions.addEventListener("change", ({ window, screen }) => {
          setDimensions(window);
       });
+   });
+
+   useEffect(() => {
       fetchItems(null)
    }, []);
 
