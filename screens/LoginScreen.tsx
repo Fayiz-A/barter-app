@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScaledSize, Dimensions, ColorValue } from "react-native";
+import { View, Text, StyleSheet, ScaledSize, Dimensions, ColorValue, useWindowDimensions } from "react-native";
 import CustomAppBar from '../components/CustomAppBar';
 import CustomTextInput from '../components/CustomTextInput';
 import { Avatar } from 'react-native-elements';
@@ -32,14 +32,8 @@ interface Props {
 
 export default function LoginScreen(props:Props) {
 
-   useEffect(() => {
-      Dimensions.addEventListener('change', ({ window, screen }: { window: ScaledSize; screen: ScaledSize }) => {
-         setDimensions(window);
-      });
-   });
+   let dimensions = useWindowDimensions();
 
-   let [ dimensions, setDimensions ] = useState<ScaledSize>(Dimensions.get('window'));
-   
    let [ email, setEmail ] = useState<string>('');
    let [ password, setPassword ] = useState<string>('');
 

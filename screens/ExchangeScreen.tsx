@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Dimensions, ScaledSize, StyleSheet } from 'react-native';
+import { View, Text, Dimensions, ScaledSize, StyleSheet, useWindowDimensions } from 'react-native';
 import CustomAppBar from '../components/CustomAppBar';
 import { FlatList, TouchableOpacity } from 'react-native-gesture-handler';
 import database from '../configs/firebase.config';
@@ -20,16 +20,10 @@ interface Props {
 
 function ExchangeScreen(props:Props) {
 
-   const [dimensions, setDimensions] = useState<ScaledSize>(Dimensions.get('window'));
    const [itemsList, setItemsList] = useState<any[]>([]);
    const [lastItemFetchedTimestamp, setLastItemFetchedTimestamp] = useState<Date | null>(null);
 
-   useEffect(() => {
-
-      Dimensions.addEventListener("change", ({ window, screen }) => {
-         setDimensions(window);
-      });
-   });
+   const dimensions = useWindowDimensions();
 
    useEffect(() => {
       fetchItems(null)
@@ -61,7 +55,7 @@ function ExchangeScreen(props:Props) {
                   oldList.push(...dataList);
                   return oldList;
                });
-               setLastItemFetchedTimestamp((oldTimestamp) => dataList[dataList.length - 1].timeStamp);
+               if(dataList.length > 0) setLastItemFetchedTimestamp((oldTimestamp) => dataList[dataList.length - 1].timeStamp);
             })
       } catch (e) {
          alert(`Some error Occurred in fetching the data!`);

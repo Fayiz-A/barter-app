@@ -5,6 +5,12 @@ export default {
             names: {
                users: 'users',
                itemsToExchange: 'itemsToExchange'
+            },
+            users: {
+               names: {
+                  name: 'name',
+                  emailID: 'emailID'
+               }
             }
          }
       }

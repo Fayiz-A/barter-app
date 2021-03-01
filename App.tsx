@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Platform, Dimensions, ScaledSize } from 'react-native';
+import { StyleSheet, Text, View, Platform, Dimensions, ScaledSize, useWindowDimensions } from 'react-native';
 import database from './configs/firebase.config';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -15,6 +15,17 @@ import firebase from 'firebase';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NavigationActions } from 'react-navigation';
 import { Icon } from 'react-native-elements';
+import SettingsScreen from './screens/SettingsScreen';
+
+interface DrawerScreenInfo {
+	name: string,
+	component: any
+}
+
+interface StackScreenInfo {
+	name: string,
+	component: any
+}
 
 function Root() {
 	const Stack = createStackNavigator();
@@ -23,18 +34,30 @@ function Root() {
 		headerShown: false
 	}
 
+	const stackScreenInfoList:StackScreenInfo[] = [
+		{
+			name: 'loginScreen',
+			component: LoginScreen,
+		},
+		{
+			name: 'homeScreen',
+			component: ExchangeViewTabNavigator,
+		}
+	];
+
 	return (
 		<Stack.Navigator initialRouteName='loginScreen'>
-			<Stack.Screen
-				name='loginScreen'
-				component={LoginScreen}
-				options={defaultOptions}
-			/>
-			<Stack.Screen
-				name='homeScreen'
-				component={ExchangeViewTabNavigator}
-				options={defaultOptions}
-			/>
+			{
+				stackScreenInfoList.map(detail => {
+					return (
+						<Stack.Screen 
+							name={detail.name}
+							component={detail.component}
+							options={defaultOptions}
+						/>
+					)
+				})
+			}
 		</Stack.Navigator>
 
 	)
@@ -43,14 +66,7 @@ function Root() {
 export default function App() {
 
 	// if(database) database.enablePersistence();
-
-	const [dimensions, setDimensions] = useState<ScaledSize>(Dimensions.get('window'));
-
-	useEffect(() => {
-		Dimensions.addEventListener("change", ({ window, screen }) => {
-			setDimensions(window);
-		});
-	}, []);
+	const dimensions = useWindowDimensions();
 
 	const Drawer = createDrawerNavigator();
 
@@ -89,6 +105,17 @@ export default function App() {
 		navigation.navigate('loginScreen');
 	}
 
+	const drawerScreenInfoList:DrawerScreenInfo[] = [
+		{
+			name: 'Home',
+			component: Root,
+		},
+		{
+			name: 'Settings',
+			component: SettingsScreen,
+		}
+	];
+
 	return (
 		<Provider>
 			<NavigationContainer>
@@ -120,11 +147,17 @@ export default function App() {
 					drawerType='front'
 
 				>
-					<Drawer.Screen
-						name='Home'
-						component={Root}
-						options={defaultOptions}
-					/>
+					{
+						drawerScreenInfoList.map(detail => {
+							return (
+								<Drawer.Screen 
+									name={detail.name}
+									component={detail.component}
+									options={defaultOptions}
+								/>
+							)
+						})
+					}
 				</Drawer.Navigator>
 			</NavigationContainer>
 		</Provider>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Dimensions, ScaledSize, StyleSheet } from 'react-native';
+import { View, Dimensions, ScaledSize, StyleSheet, useWindowDimensions } from 'react-native';
 import CustomAppBar from '../components/CustomAppBar';
 import CustomTextInput from '../components/CustomTextInput';
 import CustomButton from '../components/CustomButton';
@@ -21,14 +21,8 @@ interface TextInputDetail {
 
 function RequestScreen() {
 
-   useEffect(() => {
-      Dimensions.addEventListener('change', ({ window, screen }: { window: ScaledSize; screen: ScaledSize }) => {
-         setDimensions(window);
-      });
-   });
-
-   let [ dimensions, setDimensions ] = useState<ScaledSize>(Dimensions.get('window'));
-   
+   const dimensions = useWindowDimensions();
+      
    let [ name, setName ] = useState<string>('');
    let [ description, setDescription ] = useState<string>('');
    
