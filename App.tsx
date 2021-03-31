@@ -16,6 +16,9 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NavigationActions } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import SettingsScreen from './screens/SettingsScreen';
+import MyBartersScreen from './screens/MyBartersScreen';
+import ItemDetailScreen from './screens/secondary/ItemDetailScreen';
+import NotificationsScreen from './screens/NotificationsScreen';
 
 interface DrawerScreenInfo {
 	name: string,
@@ -42,6 +45,18 @@ function Root() {
 		{
 			name: 'homeScreen',
 			component: ExchangeViewTabNavigator,
+		},
+		{
+			name: 'itemDetailScreen',
+			component: ItemDetailScreen,
+		},
+		{
+			name: 'myBartersScreen',
+			component: MyBartersScreen,
+		},
+		{
+			name: 'notificationsScreen',
+			component: NotificationsScreen,
 		}
 	];
 
@@ -113,6 +128,15 @@ export default function App() {
 		{
 			name: 'Settings',
 			component: SettingsScreen,
+		},
+		{
+			name: 'My Barters',
+			component: MyBartersScreen,
+		},
+		,
+		{
+			name: 'Notifications',
+			component: NotificationsScreen,
 		}
 	];
 

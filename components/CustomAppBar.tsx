@@ -7,7 +7,8 @@ import { Icon } from 'react-native-paper/lib/typescript/components/Avatar/Avatar
 interface Props {
    title:string,
    color?: ColorValue,
-   drawerAvailable?: boolean
+   drawerAvailable?: boolean,
+   backButtonAvailable?: boolean
 }
 
 export default function CustomAppBar(props: Props) {
@@ -23,7 +24,17 @@ export default function CustomAppBar(props: Props) {
                icon={'menu'}
                size={30}
                onPress={() => navigation.dispatch(DrawerActions.toggleDrawer)}
-            />:null
+            />
+            :
+            props.backButtonAvailable ? <Appbar.Action 
+               icon={'chevron-left'}
+               size={30}
+               onPress={() => {
+                  if(navigation.canGoBack()) navigation.goBack()
+               }}
+            />
+            :
+            <View></View>
          }
          <Appbar.Content 
             title={props.title} 

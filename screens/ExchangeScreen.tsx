@@ -6,7 +6,7 @@ import database from '../configs/firebase.config';
 import GLOBALS from '../constants/globals';
 import { List, Divider } from 'react-native-paper';
 import CustomButton from '../components/CustomButton';
-import { useNavigation, DrawerActions } from '@react-navigation/native';
+import { useNavigation, DrawerActions, StackActions } from '@react-navigation/native';
 
 interface ItemInterface {
    name: string,
@@ -22,11 +22,14 @@ function ExchangeScreen(props:Props) {
 
    const [itemsList, setItemsList] = useState<any[]>([]);
    const [lastItemFetchedTimestamp, setLastItemFetchedTimestamp] = useState<Date | null>(null);
+   const [docID, setDocID] = useState<string>();
 
    const dimensions = useWindowDimensions();
 
+   const navigation = useNavigation();
+
    useEffect(() => {
-      fetchItems(null)
+      if(itemsList.length == 0) fetchItems(null)
    }, []);
 
    const styles = (dimensions: ScaledSize) => StyleSheet.create({
@@ -43,14 +46,19 @@ function ExchangeScreen(props:Props) {
       try {
          let dbRef;
          lastItemFetchedTimestamp != null ?
-         dbRef = database.collection(GLOBALS.firebase.firestore.collections.names.itemsToExchange).orderBy('timeStamp').startAfter(lastItemFetchedTimestamp).limit(1)
+         dbRef = database.collection(GLOBALS.firebase.firestore.collections.names.itemsToExchange).where('sent', '==', false).orderBy('timeStamp').startAfter(lastItemFetchedTimestamp).limit(1)
          :
-         dbRef = database.collection(GLOBALS.firebase.firestore.collections.names.itemsToExchange).limit(1)
+         dbRef = database.collection(GLOBALS.firebase.firestore.collections.names.itemsToExchange).where('sent', '==', false).limit(1)
 
-         database.collection(GLOBALS.firebase.firestore.collections.names.itemsToExchange)
+         dbRef
             .onSnapshot(snapshot => {
                let dataList = [];
-               dataList = snapshot.docs.map(doc => doc.data());                              
+               dataList = snapshot.docs.map(doc => {
+                  let data = doc.data();
+                  data['docID'] = doc.id
+                  return data;
+               }); 
+               console.log(dataList);
                setItemsList(oldList => {
                   oldList.push(...dataList);
                   return oldList;
@@ -94,8 +102,10 @@ function ExchangeScreen(props:Props) {
    }
 
    const exchangeItem = (item: any) => {
-      alert(`Exchanging item with name ${item.name}`)
+      props.navigation.navigate('itemDetailScreen', {item: item, navigation: props.navigation});
    }
+
+   let onEndReachedCalledDuringMomentum = true;
 
    return (
       <View>
@@ -105,8 +115,11 @@ function ExchangeScreen(props:Props) {
                data={itemsList}
                renderItem={renderItem}
                keyExtractor={(item, index) => index.toString()}
-               onEndReachedThreshold={10}
-               onEndReached={() => fetchItems(lastItemFetchedTimestamp)}
+               onEndReachedThreshold={7}
+               onEndReached={() => {
+                  if(!onEndReachedCalledDuringMomentum) fetchItems(lastItemFetchedTimestamp)
+               }}
+               onMomentumScrollBegin={() => { onEndReachedCalledDuringMomentum = false; }}
             />
          </View>
       </View>

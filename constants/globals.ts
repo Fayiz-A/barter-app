@@ -4,12 +4,19 @@ export default {
          collections: {
             names: {
                users: 'users',
-               itemsToExchange: 'itemsToExchange'
+               itemsToExchange: 'itemsToExchange',
+               barters: 'barters',
+               notifications: 'notifications'
             },
             users: {
                names: {
                   name: 'name',
                   emailID: 'emailID'
+               }
+            },
+            barters: {
+               names: {
+                  donorID: 'donorID',
                }
             }
          }

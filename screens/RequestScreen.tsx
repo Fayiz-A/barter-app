@@ -69,7 +69,9 @@ function RequestScreen() {
       return await database.collection(GLOBALS.firebase.firestore.collections.names.itemsToExchange).add({
          name: name,
          description: description,
-         timeStamp: firebase.firestore.Timestamp.now()
+         timeStamp: firebase.firestore.Timestamp.now(),
+         userID: firebase.auth().currentUser?.email,
+         sent: false
       })
       .then(res => Status.successful)
       .catch(err => Status.unknownError);

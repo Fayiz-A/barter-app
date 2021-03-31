@@ -33,9 +33,9 @@ interface Props {
 export default function LoginScreen(props:Props) {
 
    let dimensions = useWindowDimensions();
-
-   let [ email, setEmail ] = useState<string>('');
-   let [ password, setPassword ] = useState<string>('');
+   
+   let [ email, setEmail ] = useState<string>('abc@gmail.com');
+   let [ password, setPassword ] = useState<string>('testing');
 
    let [ modalVisible, setModalVisible ] = useState<boolean>(false);
    let [ emailIDInModal, setEmailIDInModal ] = useState<string>('');
