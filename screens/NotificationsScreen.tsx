@@ -141,7 +141,7 @@ function NotificationsScreen() {
 
    return (
       <View>
-         <CustomAppBar title='Notifications Screen' drawerAvailable={true} />
+         <CustomAppBar title='Notifications Screen' drawerAvailable={true} displayNotifications={false}/>
          <View>
             <SwipeListView
                data={notifications}

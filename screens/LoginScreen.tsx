@@ -320,7 +320,7 @@ export default function LoginScreen(props:Props) {
    return (
       <View style={styles(dimensions).background}>
          <View>
-            <CustomAppBar title='Login'/>
+            <CustomAppBar title='Login' displayNotifications={false}/>
                <Portal>
                   <Modal
                      dismissable={false}
