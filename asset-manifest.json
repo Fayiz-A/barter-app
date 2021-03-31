@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/barter-app/static/js/app.421cfed5.chunk.js",
-    "app.js.map": "/barter-app/static/js/app.421cfed5.chunk.js.map",
+    "app.js": "/barter-app/static/js/app.75d9a512.chunk.js",
+    "app.js.map": "/barter-app/static/js/app.75d9a512.chunk.js.map",
     "runtime~app.js": "/barter-app/static/js/runtime~app.a10aa783.js",
     "runtime~app.js.map": "/barter-app/static/js/runtime~app.a10aa783.js.map",
-    "static/js/2.e0b3213c.chunk.js": "/barter-app/static/js/2.e0b3213c.chunk.js",
-    "static/js/2.e0b3213c.chunk.js.map": "/barter-app/static/js/2.e0b3213c.chunk.js.map",
+    "static/js/2.0cdcc98a.chunk.js": "/barter-app/static/js/2.0cdcc98a.chunk.js",
+    "static/js/2.0cdcc98a.chunk.js.map": "/barter-app/static/js/2.0cdcc98a.chunk.js.map",
     "fonts/AntDesign.ttf": "/barter-app/./fonts/AntDesign.ttf",
     "fonts/Entypo.ttf": "/barter-app/./fonts/Entypo.ttf",
     "fonts/Feather.ttf": "/barter-app/./fonts/Feather.ttf",
@@ -24,7 +24,7 @@
     "index.html": "/barter-app/index.html",
     "manifest.json": "/barter-app/manifest.json",
     "serve.json": "/barter-app/serve.json",
-    "static/js/2.e0b3213c.chunk.js.LICENSE.txt": "/barter-app/static/js/2.e0b3213c.chunk.js.LICENSE.txt",
+    "static/js/2.0cdcc98a.chunk.js.LICENSE.txt": "/barter-app/static/js/2.0cdcc98a.chunk.js.LICENSE.txt",
     "static/media/bell.png": "/barter-app/static/media/bell.cf04af27.png",
     "static/media/heart.png": "/barter-app/static/media/heart.23b5c2c0.png",
     "static/media/rocket.png": "/barter-app/static/media/rocket.d2f3bf41.png",
@@ -32,7 +32,7 @@
   },
   "entrypoints": [
     "static/js/runtime~app.a10aa783.js",
-    "static/js/2.e0b3213c.chunk.js",
-    "static/js/app.421cfed5.chunk.js"
+    "static/js/2.0cdcc98a.chunk.js",
+    "static/js/app.75d9a512.chunk.js"
   ]
 }
